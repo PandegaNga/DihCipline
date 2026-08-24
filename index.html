@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DihCipline - RPG Habit & Finance Dashboard</title>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. Welcome Screen (Layar Pembuka) -->
+    <div id="welcomeScreen" class="welcome-container">
+        <div class="welcome-card">
+            <img class="welcome-avatar" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" alt="Pet Mascot">
+            <h1 class="welcome-title">DihCipline ⚔️</h1>
+            <p class="welcome-subtitle">Level Up Your Daily Life, Habits & Finances in RPG Style.</p>
+            
+            <div class="welcome-features">
+                <span>🗓️ Habit Matrix</span>
+                <span>📜 4-Tier Quests</span>
+                <span>💰 Finance Tracker</span>
+                <span>🤖 AI Companion</span>
+            </div>
+
+            <button id="btnStartNow" class="btn-start-now">START NOW 🚀</button>
+        </div>
+    </div>
+
+    <!-- 2. Dashboard App (Awalnya Tersembunyi) -->
+    <div id="dashboardApp" class="dashboard hidden">
+        
+        <!-- Header Profil & EXP -->
+        <div class="header">
+            <div>
+                <h1>DihCipline ⚔️</h1>
+                <p>Level Up Your Life</p>
+            </div>
+            
+            <div class="avatar-box">
+                <img id="avatarImg" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="Pet Pixel" />
+                <div>
+                    <div class="rank-title" id="playerRank">Novice</div>
+                    <div class="exp-text">EXP: <span id="expVal">0</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 1: HABIT MATRIX ================= -->
+        <div id="tab-habit" class="tab-content active-tab">
+            <div class="panel-box">
+                <div class="panel-top-bar">
+                    <h3 id="matrixTitle">🗓️ Monthly Habit Matrix</h3>
+                    <div class="month-picker-box">
+                        <select id="monthSelect"></select>
+                        <select id="yearSelect"></select>
+                    </div>
+                </div>
+
+                <div class="chart-box" style="height: 120px; margin: 12px 0;">
+                    <canvas id="progressChart"></canvas>
+                </div>
+
+                <div class="matrix-table-container">
+                    <table id="habitMatrixTable">
+                        <thead id="matrixHead"></thead>
+                        <tbody id="matrixBody"></tbody>
+                        <tfoot id="matrixFoot"></tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 2: DAILY QUESTS ================= -->
+        <div id="tab-quest" class="tab-content">
+            <div class="panel-box">
+                <div class="quest-header">
+                    <h3>📜 Daily Quests</h3>
+                    <span class="quest-sub">Reset Setiap Hari</span>
+                </div>
+                
+                <div class="quest-list">
+                    <div class="quest-card q-beginner">
+                        <div class="quest-info">
+                            <span class="quest-tag tag-beginner">BEGINNER (+5 EXP)</span>
+                            <p class="quest-desc">Rapikan kasur & minum 1 gelas air saat bangun tidur.</p>
+                        </div>
+                        <input type="checkbox" class="quest-cb" data-exp="5">
+                    </div>
+
+                    <div class="quest-card q-intermediate">
+                        <div class="quest-info">
+                            <span class="quest-tag tag-intermediate">INTERMEDIATE (+15 EXP)</span>
+                            <p class="quest-desc">Olahraga / workout ringan minimal 20 menit.</p>
+                        </div>
+                        <input type="checkbox" class="quest-cb" data-exp="15">
+                    </div>
+
+                    <div class="quest-card q-advanced">
+                        <div class="quest-info">
+                            <span class="quest-tag tag-advanced">ADVANCED (+30 EXP)</span>
+                            <p class="quest-desc">Fokus belajar / Deep Work 1 jam tanpa medsos.</p>
+                        </div>
+                        <input type="checkbox" class="quest-cb" data-exp="30">
+                    </div>
+
+                    <div class="quest-card q-master">
+                        <div class="quest-info">
+                            <span class="quest-tag tag-master">MASTER (+60 EXP)</span>
+                            <p class="quest-desc">Catat arus kas & pertahankan pengeluaran di bawah budget!</p>
+                        </div>
+                        <input type="checkbox" class="quest-cb" data-exp="60">
+                    </div>
+                </div>
+
+                <div class="sleep-box">
+                    <label>💤 Catat Jam Tidur Hari Ini (Jam):</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" id="sleepInput" placeholder="Misal: 7.5" step="0.5" min="0" max="24">
+                        <button id="btnSaveSleep" class="btn-sm">Log Tidur</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 3: FINANCE ================= -->
+        <div id="tab-finance" class="tab-content">
+            <div class="panel-box">
+                <h3>💰 Finance Spreadsheet & Analytics</h3>
+
+                <div class="finance-top-grid">
+                    <div class="stat-card stat-income">
+                        <span class="stat-title">Pemasukan</span>
+                        <h2 id="totalIncomeTxt">Rp 0</h2>
+                    </div>
+                    <div class="stat-card stat-expense">
+                        <span class="stat-title">Pengeluaran</span>
+                        <h2 id="totalExpenseTxt">Rp 0</h2>
+                    </div>
+                    <div class="stat-card stat-balance">
+                        <span class="stat-title">Sisa Saldo</span>
+                        <h2 id="netBalanceTxt">Rp 0</h2>
+                    </div>
+                </div>
+
+                <div class="sheet-form">
+                    <input type="date" id="txDate">
+                    <input type="text" id="txDesc" placeholder="Keterangan">
+                    <select id="txType">
+                        <option value="income">🟢 Masuk (+)</option>
+                        <option value="expense">🔴 Keluar (-)</option>
+                    </select>
+                    <input type="number" id="txAmount" placeholder="Nominal (Rp)" min="0">
+                    <button id="btnAddTx" class="btn-save">+ Simpan</button>
+                </div>
+
+                <div class="sheet-analytics-grid">
+                    <div class="sheet-table-wrapper">
+                        <table class="spreadsheet-table">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Keterangan</th>
+                                    <th>Tipe</th>
+                                    <th>Jumlah</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="txTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="charts-column">
+                        <div class="chart-card">
+                            <h4>Pola Tidur (Jam)</h4>
+                            <div class="chart-wrapper">
+                                <canvas id="sleepChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <h4>Rasio Keuangan</h4>
+                            <div class="chart-wrapper">
+                                <canvas id="moneyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 4: COACH AI ================= -->
+        <div id="tab-coach" class="tab-content">
+            <div class="panel-box">
+                <div class="ai-box">
+                    <div class="ai-header">
+                        <span class="ai-badge">🤖 AI Coach "Dih-Bot"</span>
+                        <span id="aiStatusBadge" class="ai-badge-sub">Smart Offline Mode</span>
+                    </div>
+                    <p id="aiDialogue" class="ai-dialogue">"Halo Adventurer! Cek status EXP dan selesaikan misi harianmu!"</p>
+                    <div class="ai-actions">
+                        <button id="btnAiAdvice" class="btn-secondary">Minta Evaluasi Hari Ini</button>
+                        <button id="btnToggleApiKey" class="btn-link">⚙️ Setting API Key</button>
+                    </div>
+                    <div id="apiKeyContainer" class="api-key-box" style="display: none;">
+                        <input type="password" id="geminiApiKey" placeholder="Paste Gemini API Key...">
+                        <button id="btnSaveKey" class="btn-sm">Simpan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Bar (Ala WA) -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-tab="tab-habit">
+                <span class="nav-icon">🗓️</span>
+                <span class="nav-label">Habit</span>
+            </button>
+            <button class="nav-item" data-tab="tab-quest">
+                <span class="nav-icon">📜</span>
+                <span class="nav-label">Quest</span>
+            </button>
+            <button class="nav-item" data-tab="tab-finance">
+                <span class="nav-icon">💰</span>
+                <span class="nav-label">Keuangan</span>
+            </button>
+            <button class="nav-item" data-tab="tab-coach">
+                <span class="nav-icon">🤖</span>
+                <span class="nav-label">Coach</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
