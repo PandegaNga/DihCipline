@@ -1,7 +1,8 @@
 {
   "name": "DihCipline RPG Tracker",
   "short_name": "DihCipline🥀",
-  "start_url": "./index.html",
+  "start_url": "/DihCipline/",
+  "scope": "/DihCipline/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#10b981",
